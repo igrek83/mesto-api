@@ -2,14 +2,14 @@ import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import router from './routes';
+import Config from './config';
 
-const { PORT = 3000 } = process.env;
-
+const { PORT, MONGO_IP } = Config;
 const app: Express = express();
 
 app.use(helmet());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {})
+mongoose.connect(MONGO_IP, {})
   .then(() => console.log('MongoDB connection connected'))
   .catch((err) => console.log(err));
 

@@ -22,8 +22,14 @@ enum ErrorsStatuses {
   BAD_REQUEST = 400,
 }
 
+enum SuccessStatuses {
+  SUCCESSFUL_REQUEST = 200,
+  SUCCESSFUL_CREATION = 201,
+}
+
 export {
   ErrorsMessages,
   ErrorsStatuses,
   SuccessMessages,
+  SuccessStatuses,
 };
