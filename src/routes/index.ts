@@ -6,7 +6,7 @@ import {
 } from 'express';
 import users from './users';
 import cards from './cards';
-import errorHandler from '../middleware/error-handler';
+import ErrorsConstructor from '../errors/errors-constructor';
 import { ErrorsMessages, ErrorsStatuses } from '../types/enums';
 
 const { SERVER_ERROR_MESSAGE } = ErrorsMessages;
@@ -17,7 +17,7 @@ const router: Router = Router();
 router.use(users);
 router.use(cards);
 router.use('*', (req: Request, res: Response, next: NextFunction) => {
-  errorHandler(res, next, SERVER_ERROR_MESSAGE, SERVER_ERROR);
+  next(new ErrorsConstructor(SERVER_ERROR, SERVER_ERROR_MESSAGE));
 });
 
 export default router;

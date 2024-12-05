@@ -1,4 +1,6 @@
 enum ErrorsMessages {
+  THE_USER_WITH_THIS_EMAIL_ALREADY_EXISTS = 'Пользователь с данным email уже существует',
+  INCORRECT_USERNAME_OR_PASSWORD = 'Неправильный логин или пароль',
   SERVER_ERROR_MESSAGE = 'На сервере произошла ошибка',
   ERROR_WHEN_CREATING_A_USER = 'Ошибка при создании пользователя',
   ERROR_UPDATING_USER_DATA = 'Ошибка при обновлении данных пользователя',
@@ -17,6 +19,7 @@ enum SuccessMessages {
 }
 
 enum ErrorsStatuses {
+  INVALID_AUTHORIZATION_ERROR = 401,
   SERVER_ERROR = 500,
   NOT_FOUND = 404,
   BAD_REQUEST = 400,

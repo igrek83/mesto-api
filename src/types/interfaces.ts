@@ -1,9 +1,12 @@
 import { Types } from 'mongoose';
 
 interface UserType {
-  name: string,
-  avatar: string,
-  about: string,
+  name?: string,
+  email: string,
+  password: string,
+  avatar?: string,
+  about?: string,
+  findUserByCredentials(email: string, password: string): any;
 }
 
 interface CardType {
