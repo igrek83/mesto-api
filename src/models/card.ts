@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { isURL } from 'validator';
 import type { CardType } from '../types/interfaces';
 
 const cardSchema = new mongoose.Schema<CardType>({
@@ -11,6 +12,9 @@ const cardSchema = new mongoose.Schema<CardType>({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (link: string): boolean => isURL(link),
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

@@ -8,27 +8,19 @@ import {
 
 import ErrorsConstructor from '../errors/errors-constructor';
 
-const { ERROR_UPDATING_USER_DATA } = ErrorsMessages;
-const { BAD_REQUEST } = ErrorsStatuses;
+const { USER_WAS_NOT_FOUND } = ErrorsMessages;
+const { NOT_FOUND } = ErrorsStatuses;
 const { SUCCESSFUL_REQUEST } = SuccessStatuses;
 
 export default (req: Request, res: Response, next: NextFunction) => {
   // @ts-ignore
   const { _id: userId } = req.user;
-
-  User.findByIdAndUpdate(
-    userId,
-    { ...req.body },
-    {
-      new: true,
-      runValidators: true,
-      upsert: false,
-    },
-  )
+  User.findById(userId)
+    .orFail(() => new ErrorsConstructor(NOT_FOUND, USER_WAS_NOT_FOUND))
     .then((user) => res.status(SUCCESSFUL_REQUEST).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new ErrorsConstructor(BAD_REQUEST, ERROR_UPDATING_USER_DATA));
+        next(new ErrorsConstructor(NOT_FOUND, USER_WAS_NOT_FOUND));
       } else {
         next();
       }
