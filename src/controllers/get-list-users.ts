@@ -7,7 +7,5 @@ const { SUCCESSFUL_REQUEST } = SuccessStatuses;
 export default (req: Request, res: Response, next: NextFunction) => {
   User.find()
     .then((users) => res.status(SUCCESSFUL_REQUEST).send({ users }))
-    .catch(() => {
-      next();
-    });
+    .catch(next);
 };

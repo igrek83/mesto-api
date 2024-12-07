@@ -5,16 +5,19 @@ import {
   ErrorsStatuses,
   SuccessStatuses,
 } from '../types/enums';
-import errorHandler from '../middleware/error-handler';
-import testUser from '../test-user';
+
+import ErrorsConstructor from '../errors/errors-constructor';
 
 const { ERROR_UPDATING_USER_DATA } = ErrorsMessages;
 const { BAD_REQUEST } = ErrorsStatuses;
 const { SUCCESSFUL_REQUEST } = SuccessStatuses;
 
 export default (req: Request, res: Response, next: NextFunction) => {
+  // @ts-ignore
+  const { _id: userId } = req.user;
+
   User.findByIdAndUpdate(
-    testUser,
+    userId,
     { ...req.body },
     {
       new: true,
@@ -25,7 +28,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     .then((user) => res.status(SUCCESSFUL_REQUEST).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        errorHandler(res, next, ERROR_UPDATING_USER_DATA, BAD_REQUEST);
+        next(new ErrorsConstructor(BAD_REQUEST, ERROR_UPDATING_USER_DATA));
       } else {
         next();
       }

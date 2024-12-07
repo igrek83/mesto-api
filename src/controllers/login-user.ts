@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
+import { SuccessMessages } from '../types/enums';
+
+const { SUCCESSFUL_AUTHORIZATION } = SuccessMessages;
 
 export default (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
@@ -10,14 +13,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
       const token: string = jwt.sign({ _id: user._id }, 'user-secret-token', {
         expiresIn: '7d',
       });
-      // res
-        // .cookie('jwt', token, {
-      // maxAge: 3600000,
-      // httpOnly: true,
-        // });
-      res.send({
-        token,
-      });
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+        })
+        .send({
+          message: SUCCESSFUL_AUTHORIZATION,
+        });
     })
     .catch(next);
 };

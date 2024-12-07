@@ -9,7 +9,7 @@ import {
 import ErrorsConstructor from '../errors/errors-constructor';
 
 const { THE_USER_WITH_THIS_EMAIL_ALREADY_EXISTS, ERROR_WHEN_CREATING_A_USER } = ErrorsMessages;
-const { BAD_REQUEST } = ErrorsStatuses;
+const { BAD_REQUEST, DUPLICATE_EMAIL } = ErrorsStatuses;
 const { SUCCESSFUL_CREATION } = SuccessStatuses;
 
 export default (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +26,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     }))
     .catch((err) => {
       if ((err.code === 11000)) {
-        next(new ErrorsConstructor(BAD_REQUEST, THE_USER_WITH_THIS_EMAIL_ALREADY_EXISTS));
+        next(new ErrorsConstructor(DUPLICATE_EMAIL, THE_USER_WITH_THIS_EMAIL_ALREADY_EXISTS));
       } else {
         next();
       }

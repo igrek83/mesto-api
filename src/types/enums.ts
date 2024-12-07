@@ -10,12 +10,15 @@ enum ErrorsMessages {
   ERROR_WHEN_SETTING_A_LIKE = 'Ошибка при постановке лайка',
   ERROR_WHEN_DELETING_A_LIKE = 'Ошибка при удалении лайка',
   ERROR_DELETING_THE_CARD = 'Ошибка при удалении карточки',
+  THERE_ARE_NO_RIGHTS_FOR_THIS_ACTION = 'Нет прав для данного действия',
+  UNAUTHORIZED = 'Не авторизован',
 }
 
 enum SuccessMessages {
   SUCCESS_DELETE_CARD = 'Карточка удалена успешно',
   SUCCESS_ADD_LIKE = 'Лайк добавлен успешно',
   SUCCESS_DELETE_LIKE = 'Лайк удален успешно',
+  SUCCESSFUL_AUTHORIZATION = 'Успешная Авторизация',
 }
 
 enum ErrorsStatuses {
@@ -23,6 +26,8 @@ enum ErrorsStatuses {
   SERVER_ERROR = 500,
   NOT_FOUND = 404,
   BAD_REQUEST = 400,
+  DUPLICATE_EMAIL = 409,
+  NO_RIGHTS_ERROR = 403,
 }
 
 enum SuccessStatuses {

@@ -1,27 +1,26 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { ErrorsMessages, ErrorsStatuses } from '../types/enums';
 
-// eslint-disable-next-line consistent-return
-export default (req: Request, res: Response, next: NextFunction) => {
-  const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима' });
+import ErrorsConstructor from '../errors/errors-constructor';
+
+const { UNAUTHORIZED } = ErrorsMessages;
+const { INVALID_AUTHORIZATION_ERROR } = ErrorsStatuses;
+
+export default (req: Request, res: Response, next: NextFunction): void => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    throw new ErrorsConstructor(INVALID_AUTHORIZATION_ERROR, UNAUTHORIZED);
   }
 
-  const token: string = authorization.replace('Bearer ', '');
   let payload;
   try {
     payload = jwt.verify(token, 'user-secret-token');
+    // @ts-ignore
+    req.user = payload;
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
+    throw new ErrorsConstructor(INVALID_AUTHORIZATION_ERROR, UNAUTHORIZED);
   }
-  // @ts-ignore
-  console.log(payload);
-  // @ts-ignore
-  req.user = payload;
   next();
 };

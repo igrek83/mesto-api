@@ -27,8 +27,7 @@ const userSchema = new mongoose.Schema<UserType>({
     unique: true,
     uniqueCaseInsensitive: true,
     validate: {
-      validator: (v: string): boolean => isEmail(v),
-      message: 'Введите корректный email',
+      validator: (em: string): boolean => isEmail(em),
     },
   },
   avatar: {
@@ -40,6 +39,8 @@ const userSchema = new mongoose.Schema<UserType>({
   },
   about: {
     type: String,
+    minlength: 2,
+    maxlength: 30,
     default: 'Исследователь',
   },
 }, { versionKey: false });

@@ -5,17 +5,19 @@ import {
   ErrorsStatuses,
   SuccessStatuses,
 } from '../types/enums';
-import errorHandler from '../middleware/error-handler';
-import testUser from '../test-user';
+
+import ErrorsConstructor from '../errors/errors-constructor';
 
 const { ERROR__UPDATING_THE_USERS_AVATAR } = ErrorsMessages;
 const { BAD_REQUEST } = ErrorsStatuses;
 const { SUCCESSFUL_REQUEST } = SuccessStatuses;
 
 export default (req: Request, res: Response, next: NextFunction) => {
+  // @ts-ignore
+  const { _id: userId } = req.user;
   const { avatar } = req.body;
   User.findByIdAndUpdate(
-    testUser,
+    userId,
     { $set: { avatar } },
     {
       new: true,
@@ -23,10 +25,11 @@ export default (req: Request, res: Response, next: NextFunction) => {
       upsert: false,
     },
   )
+    .orFail(new ErrorsConstructor(BAD_REQUEST, ERROR__UPDATING_THE_USERS_AVATAR))
     .then((user) => res.status(SUCCESSFUL_REQUEST).send(user))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        errorHandler(res, next, ERROR__UPDATING_THE_USERS_AVATAR, BAD_REQUEST);
+      if (err.name === 'ValidationError') {
+        next(new ErrorsConstructor(BAD_REQUEST, ERROR__UPDATING_THE_USERS_AVATAR));
       } else {
         next();
       }

@@ -5,20 +5,22 @@ import {
   ErrorsStatuses,
   SuccessStatuses,
 } from '../types/enums';
-import errorHandler from '../middleware/error-handler';
+
+import ErrorsConstructor from '../errors/errors-constructor';
 
 const { USER_WAS_NOT_FOUND } = ErrorsMessages;
 const { NOT_FOUND } = ErrorsStatuses;
 const { SUCCESSFUL_REQUEST } = SuccessStatuses;
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  const { userId } = req.params;
+  // @ts-ignore
+  const { _id: userId } = req.user;
   User.findById(userId)
-    .orFail(() => new Error(USER_WAS_NOT_FOUND))
+    .orFail(() => new ErrorsConstructor(NOT_FOUND, USER_WAS_NOT_FOUND))
     .then((user) => res.status(SUCCESSFUL_REQUEST).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        errorHandler(res, next, USER_WAS_NOT_FOUND, NOT_FOUND);
+        next(new ErrorsConstructor(NOT_FOUND, USER_WAS_NOT_FOUND));
       } else {
         next();
       }
