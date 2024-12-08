@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Card from '../models/card';
+import changingLikeCard from '../utils/changing-like-card';
 
 import {
   ErrorsMessages,
@@ -18,14 +18,9 @@ const { SUCCESSFUL_REQUEST } = SuccessStatuses;
 export default (req: Request, res: Response, next: NextFunction) => {
   // @ts-ignore
   const { _id: userId } = req.user;
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: userId } },
-    { new: true },
-  )
-    .orFail(() => new ErrorsConstructor(BAD_REQUEST, ERROR_WHEN_DELETING_A_LIKE))
+  changingLikeCard(req.params.cardId, userId, false)
     .then(() => res.status(SUCCESSFUL_REQUEST).send({ status: 'success', message: SUCCESS_DELETE_LIKE }))
-    .catch((err) => {
+    .catch((err: { name: string; }) => {
       if (err.name === 'Error') {
         next(new ErrorsConstructor(BAD_REQUEST, ERROR_WHEN_DELETING_A_LIKE));
       } else {
